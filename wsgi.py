@@ -14,4 +14,4 @@ if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
 # 导入程序实例
-from .app import app
+from app import app

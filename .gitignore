@@ -1,4 +1,38 @@
-/.env
-/data.db
+# flask
+.env
 
+# database
+*.db
+data.db
 
+# vritual env or real env
+env/
+venv/
+*.env
+
+# pycharm default config
+/.idea
+
+# pyinstaller packages may use
+dist/
+bulid/
+*.spec
+
+# Windows:
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Python:
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+
+# log
+logs/
+*.log
+
+# django_or_flask migrate
+migrations/

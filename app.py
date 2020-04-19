@@ -4,6 +4,7 @@ import os
 import sys
 from flask import Flask, url_for, render_template, request, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 
 if sys.platform.startswith('win'):
     prefix = 'sqlite:///'
@@ -65,6 +66,14 @@ class User(db.Model):  # 表名将会是user(自动生成，小写处理)
     # 类属性字段实例化 db.Column
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20))
+    username = db.Column(db.String(20))  # 用户名
+    password_hash = db.Column(db.String(128))  # 密码散列值
+
+    def set_password(self, password):  # 设置密码
+        self.password_hash = generate_password_hash(password)
+
+    def validate_password(self, password):  # 验证密码
+        return check_password_hash(self.password_hash, password)
 
 
 class Movie(db.Model):
@@ -75,6 +84,7 @@ class Movie(db.Model):
 
 @app.cli.command()
 @click.option('--drop', is_flag=True, help='Create after drop.')
+# use_like_this: $ flask initdb --drop
 def initdb(drop):
     if drop:
         db.drop_all()
@@ -104,6 +114,19 @@ def forge():
     
     db.session.commit()
     click.echo('Done.')
+
+
+@app.cli.command()
+@click.option('--username', prompt=True, help='The username used to login.')
+@click.option('--password', prompt=True, hide_input=True, confirmation_prompt=True, help='The password used to login.')
+def admin(username, password):
+    """create user"""
+    db.create_all()
+
+    user = User.query.first()
+    if user is not None:
+        click.echo('Updating user...')
+
 
 
 @app.errorhandler(404)

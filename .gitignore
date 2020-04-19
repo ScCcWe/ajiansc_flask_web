@@ -1,2 +1,4 @@
-/Flask_Code.env
-/Flask_Code.data.db
+/.env
+/data.db
+
+
